@@ -4,6 +4,7 @@
 #include <QColor>
 #include <string>
 #include <fstream>
+#include <QRgb>
 
 using namespace std;
 
@@ -16,10 +17,17 @@ int main()
     ofstream f("muestreo.txt");
     f<<"holi"<<endl;
 
-    int limX=0,limY=0;
+    int limX=0,limY=0,iter=0, iter2=0;
     int R=0, G=0, B=0;
     //submuestreo la imagen original en una relacion 4:4 a 1 pixel, es decir
     //promedio la intensidad RGB de 16 pixeles en  1
+
+    QRgb **mat=NULL;
+
+    mat = new QRgb * [(imagen.height()/4)]; //se crea matriz para llenarla con los RGB
+    for (int fil = 0; fil<(imagen.width())/4; fil++){
+        mat[fil] = new QRgb [(imagen.width())/4];
+    }
 
      while( limY< imagen.height()){
      int plusR=0,plusG=0,plusB=0,cont=0;
@@ -34,23 +42,24 @@ int main()
 
         R= (plusR / cont);
         G= (plusG / cont);
-        B= (plusB /cont);
+        B= (plusB / cont);
 
-        QColor **mat=NULL;
 
-        mat = new QColor * [(imagen.height()/4)]; //se crea matriz para llenarla con los RGB
-        for (int fil = 0; fil<(imagen.width())/4; fil++){
-            mat[fil] = new QColor [(imagen.width())/4];
+
+        for (int i= iter ; i<iter+1;i++){
+            for (int j=iter2; j<(iter2+1);j++){
+                mat[i][j]= qRgb(R,G,B);
+                cout <<"Red: "<< qRed(mat[i][j])<<" Green: "<<qGreen(mat[i][j])<<" Blue: "<<qBlue(mat[i][j])<<" Iters: "<<i<<":"<<j<<endl;
+            }
         }
-
-        //for (int i=0; i<fil) {
-
-        //}
+        iter2+=1;
 
         limX+=4;
         if(limX>=imagen.width()){
             limX=0;
             limY+=4;
+            iter+=1;
+            iter2+=0;
         }
 
      }
